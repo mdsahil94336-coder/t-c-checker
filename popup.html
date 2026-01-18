@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    body {
+      width: 420px;
+      min-height: 550px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .subtitle {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+    
+    .examples {
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .examples h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .example-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    
+    .example-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .example-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+    
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 12px;
+      resize: none;
+      margin-bottom: 12px;
+    }
+    
+    textarea::placeholder { 
+      color: rgba(255,255,255,0.6); 
+    }
+    
+    button.scan {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: white;
+      color: #667eea;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    button.scan:hover { 
+      transform: translateY(-2px); 
+    }
+    
+    button.scan:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    button.auto-detect {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    button.auto-detect:hover {
+      background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 30px 20px;
+      display: none;
+    }
+    
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .results {
+      display: none;
+      margin-top: 20px;
+    }
+    
+    .score-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    
+    .score {
+      font-size: 48px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    
+    .red-flag {
+      background: rgba(255,255,255,0.1);
+      border-left: 4px solid #ff4444;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .red-flag.concerning { 
+      border-left-color: #ffaa00; 
+    }
+    
+    .red-flag.caution { 
+      border-left-color: #ffee00; 
+    }
+    
+    .flag-title {
+      font-weight: bold;
+      font-size: 11px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .flag-desc {
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    
+    .flag-clause {
+      font-size: 11px;
+      opacity: 0.8;
+      font-style: italic;
+    }
+    
+    button.new-scan {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    button.new-scan:hover { 
+      background: rgba(255,255,255,0.3); 
+    }
+  </style>
+</head>
+<body>
+  <h1>🛡️ T&C Scanner</h1>
+  <p class="subtitle">AI-powered Terms of Service analysis</p>
+  
+  <div id="input-section">
+    <div class="examples">
+      <h3>🚀 Try an example:</h3>
+  <div class="example-btns">
+        <button class="example-btn" onclick="loadExample('instagram')">Instagram</button>
+        <button class="example-btn" onclick="loadExample('chatgpt')">ChatGPT</button>
+        <button class="example-btn" onclick="loadExample('youtube')">YouTube</button>
+      </div>
+    </div>
+    
+    <textarea id="tos-input" placeholder="Or paste any Terms of Service here..."></textarea>
+
+    <button class="scan auto-detect" id="auto-detect-btn">⚡ Auto-Detect T&C on This Page</button>
+    <div style="text-align: center; margin: 8px 0; color: rgba(255,255,255,0.6); font-size: 11px;">OR</div>
+    <button class="scan" id="scan-btn">🔍 Scan Pasted Text</button>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Analyzing with AI...</p>
+  </div>
+
+  <div class="results" id="results">
+    <div class="score-card">
+      <div>Safety Score</div>
+      <div class="score" id="score">--</div>
+      <div id="recommendation">--</div>
+    </div>
+    <div id="flags-container"></div>
+    <button class="new-scan" id="new-scan">Scan Another</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

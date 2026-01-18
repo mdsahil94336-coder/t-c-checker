@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "T&C Red Flag Scanner1",
+  "version": "1.0.0",
+  "description": "Instantly scan Terms of Service for red flags",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
